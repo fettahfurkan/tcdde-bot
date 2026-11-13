@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TCDD Koltuk Takip</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>TCDD Koltuk Takip</h1>
+    <span id="badge" class="badge" data-state="idle">Hazır</span>
+  </header>
+
+  <main class="container">
+    <section class="summary-panel">
+      <div class="route-row">
+        <div class="route-col">
+          <span class="section-label">Güzergâh</span>
+          <h2 id="routeTitle">Açık sefer yok</h2>
+        </div>
+        <div class="date-col">
+          <span class="section-label">Tarih</span>
+          <p id="date" class="date-value">—</p>
+        </div>
+      </div>
+
+      <div id="statusBox" class="status-box" aria-live="polite">
+        <span id="dot" class="dot"></span>
+        <div class="status-body">
+          <strong id="statusTitle">Sayfa kontrol ediliyor</strong>
+          <p id="message">TCDD sefer listesini açın.</p>
+          <p id="timing" class="timing" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <form id="form" class="control-form">
+      <div class="input-grid">
+        <label class="input-group" for="start">
+          <span>Başlangıç saati</span>
+          <input id="start" type="time" value="00:00" required>
+        </label>
+        <label class="input-group" for="end">
+          <span>Bitiş saati</span>
+          <input id="end" type="time" value="23:59" required>
+        </label>
+        <label class="input-group" for="interval">
+          <span>Aralık (sn)</span>
+          <input id="interval" type="number" min="1" step="1" value="10" required>
+        </label>
+      </div>
+
+      <div class="options-list">
+        <label class="check">
+          <input id="sound" type="checkbox" checked>
+          <span>Koltuk bulunduğunda sesli uyar</span>
+        </label>
+        <label class="check">
+          <input id="stopOnFound" type="checkbox" checked>
+          <span>Koltuk bulunduğunda takibi durdur</span>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="startButton" class="btn-primary">
+          <span id="startLabel">Başlat</span>
+        </button>
+        <button type="button" id="stopButton" class="btn-secondary">Durdur</button>
+        <button type="button" id="test" class="btn-ghost">Sesi dene</button>
+      </div>
+
+      <p id="applyStatus" class="auto-save" role="status">Ayarlar otomatik kaydedilir.</p>
+    </form>
+
+    <p id="error" class="error" role="alert" hidden></p>
+
+    <details id="diagnosticsBox" class="panel-details" hidden>
+      <summary>Teknik tanı bilgisi</summary>
+      <textarea id="diagnostics" readonly rows="6" aria-label="Okuma tanısı"></textarea>
+    </details>
+
+    <section id="results" class="results-section" hidden>
+      <div class="results-header">
+        <h3>Seferler</h3>
+        <span>Müsait koltuk</span>
+      </div>
+      <div id="trips" class="trips-list"></div>
+    </section>
+
+    <details class="panel-details telegram">
+      <summary>
+        <span>Telegram bildirimi</span>
+        <span id="tgSummary" class="summary-meta">Bağlı değil</span>
+      </summary>
+      <div class="telegram-body">
+        <p class="tg-help">BotFather'dan aldığınız API anahtarını girin, Telegram'da botunuza /start gönderip hedef sohbeti seçin.</p>
+        <label class="check">
+          <input id="telegramEnabled" type="checkbox" disabled>
+          <span>Telegram bildirimlerini etkinleştir</span>
+        </label>
+        <label class="tg-field">
+          <span>BotFather API anahtarı</span>
+          <input id="tgToken" type="password" autocomplete="off" spellcheck="false" placeholder="Anahtarı girin">
+        </label>
+        <label class="tg-field">
+          <span>Sohbet ID <small>(boş bırakılırsa otomatik aranır)</small></span>
+          <input id="tgChatId" type="text" inputmode="numeric" autocomplete="off" placeholder="Örn. 123456789">
+        </label>
+        <div class="tg-connect-row">
+          <button id="tgConnect" type="button" class="btn-secondary">Bağla / Sohbet bul</button>
+          <label class="btn-ghost file-label">
+            <span>Dosyadan yükle</span>
+            <input id="tgFile" type="file" accept=".txt,.json,text/plain,application/json" hidden>
+          </label>
+        </div>
+        <a id="tgBotLink" class="tg-link" target="_blank" rel="noopener noreferrer" hidden></a>
+        <select id="tgChats" aria-label="Hedef Telegram sohbeti" hidden></select>
+        <p id="tgStatus" class="tg-status" role="status"></p>
+        <p id="tgLast" class="tg-last"></p>
+        <div class="tg-actions">
+          <button id="tgTest" type="button" class="btn-ghost" disabled>Deneme mesajı</button>
+          <button id="tgRemove" type="button" class="btn-ghost" disabled>Bağlantıyı kaldır</button>
+        </div>
+      </div>
+    </details>
+  </main>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
